@@ -37,18 +37,12 @@ public class MainMenu {
         switch (selection) {
             case 1:
                 performDeposit();
-            case 2:
-                retrieveBalance();
         }
-    }
-
-    public void retrieveBalance() {
-        System.out.println("You have: $" + userAccount.getBalance() + " in your account.");
     }
 
     public void performDeposit() {
         double depositAmount = -1;
-        while (depositAmount < 0) {
+        while(depositAmount < 0) {
             System.out.print("How much would you like to deposit: ");
             depositAmount = keyboardInput.nextInt();
         }
