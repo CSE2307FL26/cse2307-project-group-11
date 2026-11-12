@@ -26,7 +26,7 @@ public class MainMenu {
         this.keyboardInput = new Scanner(System.in);
     }
 
-    public void displayOptions() {
+    public void displayUserOptions() {
         System.out.println("Welcome to the 237 Bank App!");
 
         System.out.println("1. Make a deposit");
@@ -40,7 +40,7 @@ public class MainMenu {
 
         System.out.println("1. Charge fee");
         System.out.println("2. Exit admin mode");
-        System.out.println("3. Exit admin mode");
+        System.out.println("3. Exit the app");
 
     }
 
@@ -71,22 +71,39 @@ public class MainMenu {
 
     }
 
+    public void exitAdminMode() {
+        System.out.println("Exited admin mode. ");
+        isAdmin = false;
+    }
+
     public int getUserSelection(int max) {
         int selection = -1;
         while (selection < 1 || selection > max) {
             System.out.print("Please make a selection: ");
             selection = keyboardInput.nextInt();
+            keyboardInput.nextLine(); // Clear newline buffer
         }
         return selection;
     }
 
-    public void processInput(int selection) {
+    public void processUserInput(int selection) {
         switch (selection) {
             case 1:
                 performDeposit();
                 break;
             case 2:
-                loginPrompt();
+                adminLogin();
+                break;
+        }
+    }
+
+    public void processAdminInput(int selection) {
+        switch (selection) {
+            case 1:
+                chargeFee();
+                break;
+            case 2:
+                exitAdminMode();
                 break;
         }
     }
@@ -100,12 +117,36 @@ public class MainMenu {
         userAccount.deposit(depositAmount);
     }
 
+    public void chargeFee() {
+        double feeAmount = -1;
+        while (feeAmount < 0) {
+            System.out.print("How much would you like to charge for a fee: ");
+            feeAmount = keyboardInput.nextInt();
+        }
+        userAccount.chargeFee(feeAmount);
+    }
+
+    public boolean exitSelected(int selection) {
+        if (isAdmin) {
+            return selection == EXIT_SELECTION_ADMIN;
+        } else {
+            return selection == EXIT_SELECTION_USER;
+        }
+    }
+
     public void run() {
         int selection = -1;
-        while (selection != EXIT_SELECTION_USER) {
-            displayOptions();
-            selection = getUserSelection(MAX_SELECTION_USER);
-            processInput(selection);
+        while (!exitSelected(selection)) {
+            if (!isAdmin) {
+                displayUserOptions();
+                selection = getUserSelection(MAX_SELECTION_USER);
+                processUserInput(selection);
+            } else {
+                displayAdminOptions();
+                selection = getUserSelection(MAX_SELECTION_ADMIN);
+                processAdminInput(selection);
+
+            }
         }
     }
 
