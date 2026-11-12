@@ -2,9 +2,9 @@
 
 ## Team Members:
 
-* 
-* 
-* 
+* Jenny
+* Eli
+* Willow
 * 
 
 ## User stories
