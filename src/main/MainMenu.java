@@ -4,8 +4,8 @@ import java.util.Scanner;
 
 public class MainMenu {
 
-    private static final int EXIT_SELECTION_USER = 5;
-    private static final int MAX_SELECTION_USER = 5;
+    private static final int EXIT_SELECTION_USER = 6;
+    private static final int MAX_SELECTION_USER = 6;
     private static final int EXIT_SELECTION_ADMIN = 3;
     private static final int MAX_SELECTION_ADMIN = 3;
 
@@ -16,12 +16,15 @@ public class MainMenu {
     private static final int LOGIN_QUIT = 1;
     private static final int LOGIN_FAIL = 2;
 
-    private BankAccount userAccount;
+
+    private Bank bank;
+	private BankAccount userAccount;
     private Scanner keyboardInput;
 
     private boolean isAdmin;
 
     public MainMenu() {
+        this.bank = new Bank();
         this.userAccount = new BankAccount();
         this.keyboardInput = new Scanner(System.in);
     }
@@ -32,8 +35,9 @@ public class MainMenu {
         System.out.println("1. Make a deposit");
         System.out.println("2. Make a withdrawal");
         System.out.println("3. Get Balance");
-        System.out.println("4. Login as administrator");
-        System.out.println("5. Exit the app");
+        System.out.println("4. Create an additional account");
+        System.out.println("5. Login as administrator");
+        System.out.println("6. Exit the app");
 
     }
 
@@ -98,8 +102,12 @@ public class MainMenu {
                 break;
             case 3:
                 retrieveBalance();
+                break;
             case 4:
                 adminLogin();
+                break;
+            case 5:
+                performCreateAccount();
                 break;
         }
     }
@@ -157,6 +165,12 @@ public class MainMenu {
         } else {
             return selection == EXIT_SELECTION_USER;
         }
+    }
+    public void performCreateAccount() {
+        bank.createAccount();
+
+        System.out.println("New account created successfully!");
+        System.out.println("Total accounts: " + bank.getAccountCount());
     }
 
     public void run() {
