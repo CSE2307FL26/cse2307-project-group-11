@@ -36,6 +36,9 @@ public class MainMenu {
         switch (selection) {
             case 1:
                 performDeposit();
+                break;
+            case 2:
+                break;
         }
     }
 
