@@ -4,13 +4,15 @@ import java.util.Scanner;
 
 public class MainMenu {
 
-    private static final int EXIT_SELECTION = 3;
-	private static final int MAX_SELECTION = 3;
+    private static final int EXIT_SELECTION = 4;
+	private static final int MAX_SELECTION = 4;
 
+    private Bank bank;
 	private BankAccount userAccount;
     private Scanner keyboardInput;
 
     public MainMenu() {
+        this.bank = new Bank();
         this.userAccount = new BankAccount();
         this.keyboardInput = new Scanner(System.in);
     }
@@ -20,7 +22,8 @@ public class MainMenu {
         
         System.out.println("1. Make a deposit");
         System.out.println("2. Make a withdrawal");
-        System.out.println("3. Exit the app");
+        System.out.println("3. Create an additional account");
+        System.out.println("4. Exit the app");
 
     }
 
@@ -40,6 +43,9 @@ public class MainMenu {
                 break;
             case 2:
                 performWithdraw();
+                break;
+            case 3:
+                performCreateAccount();
                 break;
         }
     }
@@ -65,6 +71,12 @@ public class MainMenu {
         } catch (IllegalArgumentException e) {
         System.out.println("Invalid withdrawal amount.");
         }
+    }
+    public void performCreateAccount() {
+        bank.createAccount();
+
+        System.out.println("New account created successfully!");
+        System.out.println("Total accounts: " + bank.getAccountCount());
     }
 
     public void run() {

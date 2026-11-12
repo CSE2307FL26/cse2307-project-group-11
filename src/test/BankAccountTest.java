@@ -1,9 +1,11 @@
 package test;
 
+import main.Bank;
 import main.BankAccount;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 import org.junit.jupiter.api.Test;
 
@@ -57,6 +59,48 @@ public class BankAccountTest {
         } catch (IllegalArgumentException e) {
             //do nothing
         }
+    }
+    
+    @Test
+    public void testInitialAccount() {
+        Bank bank = new Bank();
+        assertEquals(1, bank.getAccountCount());
+    }
+
+    @Test
+    public void testCreateAdditionalAccount() {
+        Bank bank = new Bank();
+        bank.createAccount();
+
+        assertEquals(2, bank.getAccountCount());
+    }
+
+    @Test
+    public void testNewAccountBalance() {
+        Bank bank = new Bank();
+        BankAccount newAccount = bank.createAccount();
+
+        assertEquals(0, newAccount.getBalance(), 0.01);
+    }
+
+    @Test
+    public void testExistingAccountUnchanged() {
+        Bank bank = new Bank();
+        BankAccount firstAccount = bank.getAccount(0);
+        firstAccount.deposit(100);
+
+        bank.createAccount();
+
+        assertEquals(100, firstAccount.getBalance(), 0.01);
+        assertEquals(0, bank.getAccount(1).getBalance(), 0.01);
+    }
+
+    @Test
+    public void testNewAccountExists() {
+        Bank bank = new Bank();
+        BankAccount newAccount = bank.createAccount();
+
+        assertNotNull(newAccount);
     }
 }
 
