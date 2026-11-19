@@ -1,7 +1,5 @@
 package main;
 
-import java.util.Scanner;
-
 public class AdminMenu extends Menu {
 
     public static final int EXIT_ADMIN_SELECTION = 2;
@@ -14,16 +12,8 @@ public class AdminMenu extends Menu {
     private static final int LOGIN_QUIT = 1;
     private static final int LOGIN_FAIL = 2;
 
-    private final BankAccount userAccount;
-    private boolean isAdmin;
-
-    public AdminMenu(BankAccount userAccount, Scanner keyboardInput) {
-        super(keyboardInput, MAX_SELECTION, EXIT_APP_SELECTION);
-        this.userAccount = userAccount;
-    }
-
-    public boolean isAdmin() {
-        return isAdmin;
+    public AdminMenu(MenuState state) {
+        super(state, MAX_SELECTION, EXIT_APP_SELECTION);
     }
 
     public void displayOptions() {
@@ -34,13 +24,14 @@ public class AdminMenu extends Menu {
         System.out.println("3. Exit the app");
     }
 
-    public void adminLogin() {
+    public boolean adminLogin() {
         int loginStatus = loginPrompt();
         if (loginStatus == LOGIN_SUCCESS) {
             System.out.println("Admin login successful, entering admin mode");
-            isAdmin = true;
+            return true;
         } else {
             System.out.println("Admin login prompt exited");
+            return false;
         }
     }
 
@@ -62,18 +53,18 @@ public class AdminMenu extends Menu {
 
     public void exitAdminMode() {
         System.out.println("Exited admin mode. ");
-        isAdmin = false;
     }
 
-    public void processInput(int selection) {
+    public MenuAction processInput(int selection) {
         switch (selection) {
             case 1:
                 chargeFee();
                 break;
             case 2:
                 exitAdminMode();
-                break;
+                return MenuAction.EXIT_ADMIN;
         }
+        return MenuAction.CONTINUE;
     }
 
     public void chargeFee() {
@@ -82,7 +73,7 @@ public class AdminMenu extends Menu {
             System.out.print("How much would you like to charge for a fee: ");
             feeAmount = keyboardInput.nextInt();
         }
-        userAccount.chargeFee(feeAmount);
+        state.getUserAccount().chargeFee(feeAmount);
     }
 
 }

@@ -4,19 +4,28 @@ import java.util.Scanner;
 
 public abstract class Menu {
 
+    public enum MenuAction {
+        CONTINUE,
+        EXIT_APP,
+        ENTER_ADMIN,
+        EXIT_ADMIN
+    }
+
     protected final Scanner keyboardInput;
+    protected final MenuState state;
     protected final int maxSelection;
     protected final int exitSelection;
 
-    protected Menu(Scanner keyboardInput, int maxSelection, int exitSelection) {
-        this.keyboardInput = keyboardInput;
+    protected Menu(MenuState state, int maxSelection, int exitSelection) {
+        this.state = state;
+        this.keyboardInput = state.getKeyboardInput();
         this.maxSelection = maxSelection;
         this.exitSelection = exitSelection;
     }
 
     public abstract void displayOptions();
 
-    public abstract void processInput(int selection);
+    public abstract MenuAction processInput(int selection);
 
     public int getSelection() {
         int selection = -1;
@@ -32,13 +41,12 @@ public abstract class Menu {
         return selection == exitSelection;
     }
 
-    public boolean runMenu() {
+    public MenuAction runMenu() {
         displayOptions();
         int selection = getSelection();
         if (exitSelected(selection)) {
-            return true;
+            return MenuAction.EXIT_APP;
         }
-        processInput(selection);
-        return false;
+        return processInput(selection);
     }
 }

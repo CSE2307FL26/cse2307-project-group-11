@@ -8,24 +8,30 @@ public class MainMenu {
     private final AdminMenu adminMenu;
 
     public MainMenu() {
-        Scanner keyboardInput = new Scanner(System.in);
-        Bank bank = new Bank();
-        BankAccount userAccount = new BankAccount();
-        this.adminMenu = new AdminMenu(userAccount, keyboardInput);
-        this.userMenu = new UserMenu(bank, userAccount, keyboardInput, adminMenu);
+        MenuState state = new MenuState(
+            new Scanner(System.in),
+            new Bank(),
+            new BankAccount()
+        );
+        this.adminMenu = new AdminMenu(state);
+        this.userMenu = new UserMenu(state, adminMenu);
     }
 
     public void run() {
         Menu currentMenu = userMenu;
         while (true) {
-            if (currentMenu.runMenu()) {
-                break;
-            }
-
-            if (currentMenu == userMenu && adminMenu.isAdmin()) {
-                currentMenu = adminMenu;
-            } else if (currentMenu == adminMenu && !adminMenu.isAdmin()) {
-                currentMenu = userMenu;
+            Menu.MenuAction action = currentMenu.runMenu();
+            switch (action) {
+                case EXIT_APP:
+                    return;
+                case ENTER_ADMIN:
+                    currentMenu = adminMenu;
+                    break;
+                case EXIT_ADMIN:
+                    currentMenu = userMenu;
+                    break;
+                case CONTINUE:
+                    break;
             }
         }
     }

@@ -1,21 +1,16 @@
 package main;
 
 import java.util.ArrayList;
-import java.util.Scanner;
 
 public class UserMenu extends Menu {
 
     public static final int EXIT_SELECTION = 7;
     public static final int MAX_SELECTION = 7;
 
-    private final Bank bank;
-    private final BankAccount userAccount;
     private final AdminMenu adminMenu;
 
-    public UserMenu(Bank bank, BankAccount userAccount, Scanner keyboardInput, AdminMenu adminMenu) {
-        super(keyboardInput, MAX_SELECTION, EXIT_SELECTION);
-        this.bank = bank;
-        this.userAccount = userAccount;
+    public UserMenu(MenuState state, AdminMenu adminMenu) {
+        super(state, MAX_SELECTION, EXIT_SELECTION);
         this.adminMenu = adminMenu;
     }
 
@@ -31,7 +26,7 @@ public class UserMenu extends Menu {
         System.out.println("7. Exit the app");
     }
 
-    public void processInput(int selection) {
+    public MenuAction processInput(int selection) {
         switch (selection) {
             case 1:
                 performDeposit();
@@ -43,7 +38,9 @@ public class UserMenu extends Menu {
                 retrieveBalance();
                 break;
             case 4:
-                adminMenu.adminLogin();
+                if (adminMenu.adminLogin()) {
+                    return MenuAction.ENTER_ADMIN;
+                }
                 break;
             case 5:
                 performCreateAccount();
@@ -52,10 +49,11 @@ public class UserMenu extends Menu {
                 printTransactionHistory();
                 break;
         }
+        return MenuAction.CONTINUE;
     }
 
     public void retrieveBalance() {
-        System.out.println("You have: $" + userAccount.getBalance() + " in your account.");
+        System.out.println("You have: $" + state.getUserAccount().getBalance() + " in your account.");
     }
 
     public void performDeposit() {
@@ -64,7 +62,7 @@ public class UserMenu extends Menu {
             System.out.print("How much would you like to deposit: ");
             depositAmount = keyboardInput.nextInt();
         }
-        userAccount.deposit(depositAmount);
+        state.getUserAccount().deposit(depositAmount);
     }
 
     public void performWithdraw() {
@@ -75,21 +73,21 @@ public class UserMenu extends Menu {
         }
 
         try {
-            userAccount.withdraw(withdrawAmount);
+            state.getUserAccount().withdraw(withdrawAmount);
         } catch (IllegalArgumentException e) {
             System.out.println("Invalid withdrawal amount.");
         }
     }
 
     public void performCreateAccount() {
-        bank.createAccount();
+        state.getBank().createAccount();
 
         System.out.println("New account created successfully!");
-        System.out.println("Total accounts: " + bank.getAccountCount());
+        System.out.println("Total accounts: " + state.getBank().getAccountCount());
     }
 
     public void printTransactionHistory() {
-        ArrayList<Transaction> transactions = userAccount.getTransactionHistory();
+        ArrayList<Transaction> transactions = state.getUserAccount().getTransactionHistory();
         System.out.println("---Transaction History---");
         for (Transaction transaction : transactions) {
             System.out.println(transaction);
