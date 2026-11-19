@@ -2,12 +2,13 @@ package test;
 
 import main.Bank;
 import main.BankAccount;
-
+import main.Transaction;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
-
 import org.junit.jupiter.api.Test;
+
+import java.util.ArrayList;
 
 public class BankAccountTest {
 
@@ -115,5 +116,33 @@ public class BankAccountTest {
         BankAccount newAccount = bank.createAccount();
 
         assertNotNull(newAccount);
+    }
+
+    @Test
+    public void testTransactionHistoryOfNewAccount() {
+        BankAccount testAccount = new BankAccount();
+        assertEquals(0, testAccount.getTransactionHistory().size());
+    }
+
+    @Test
+    public void testTransactionHistoryOfSingleDeposit() {
+        BankAccount testAccount = new BankAccount();
+        testAccount.deposit(50);
+        ArrayList<Transaction> transactions = testAccount.getTransactionHistory();
+
+        Transaction firstTransaction = new Transaction("deposit",50);
+        assertEquals(firstTransaction,transactions.get(0));
+    }
+    @Test
+    public void testTransactionHistoryOfMultipleDeposits() {
+        BankAccount testAccount = new BankAccount();
+        testAccount.deposit(50);
+        testAccount.deposit(20);
+        ArrayList<Transaction> transactions = testAccount.getTransactionHistory();
+
+        Transaction firstTransaction = new Transaction("deposit",50);
+        Transaction secondTransaction = new Transaction("deposit",20);
+        assertEquals(firstTransaction,transactions.get(0));
+        assertEquals(secondTransaction,transactions.get(1));
     }
 }

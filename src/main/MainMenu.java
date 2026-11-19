@@ -1,11 +1,12 @@
 package main;
 
+import java.util.ArrayList;
 import java.util.Scanner;
 
 public class MainMenu {
 
-    private static final int EXIT_SELECTION_USER = 6;
-    private static final int MAX_SELECTION_USER = 6;
+    private static final int EXIT_SELECTION_USER = 7;
+    private static final int MAX_SELECTION_USER = 7;
     private static final int EXIT_SELECTION_ADMIN = 3;
     private static final int MAX_SELECTION_ADMIN = 3;
 
@@ -37,7 +38,8 @@ public class MainMenu {
         System.out.println("3. Get Balance");
         System.out.println("4. Create an additional account");
         System.out.println("5. Login as administrator");
-        System.out.println("6. Exit the app");
+        System.out.println("6. Display transaction history");
+        System.out.println("7. Exit the app");
 
     }
 
@@ -109,6 +111,17 @@ public class MainMenu {
             case 5:
                 performCreateAccount();
                 break;
+            case 6:
+                printTransactionHistory();
+                break;
+        }
+    }
+
+    private void printTransactionHistory() {
+        ArrayList<Transaction> transactions = userAccount.getTransactionHistory();
+        System.out.println("---Transaction History---");
+        for (Transaction transaction : transactions) {
+            System.out.println(transaction);
         }
     }
 
