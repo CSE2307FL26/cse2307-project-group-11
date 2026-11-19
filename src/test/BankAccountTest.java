@@ -145,4 +145,20 @@ public class BankAccountTest {
         assertEquals(firstTransaction,transactions.get(0));
         assertEquals(secondTransaction,transactions.get(1));
     }
+
+    @Test
+    public void testTransactionHistoryWithDifferentTransactionTypes() {
+        BankAccount testAccount = new BankAccount();
+        testAccount.deposit(50);
+        testAccount.withdraw(20);
+        testAccount.chargeFee(10);
+        ArrayList<Transaction> transactions = testAccount.getTransactionHistory();
+
+        Transaction firstTransaction = new Transaction("deposit",50);
+        Transaction secondTransaction = new Transaction("withdrawal",20);
+        Transaction thirdTransaction = new Transaction("admin fee", 10);
+        assertEquals(firstTransaction,transactions.get(0));
+        assertEquals(secondTransaction,transactions.get(1));
+        assertEquals(thirdTransaction,transactions.get(2));
+    }
 }

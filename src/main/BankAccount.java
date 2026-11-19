@@ -24,6 +24,7 @@ public class BankAccount {
     public void withdraw(double amount) {
         if (amount > 0 && amount <= this.balance) {
             this.balance -= amount;
+            this.transactions.add(new Transaction("withdrawal", amount));
         } else {
             throw new IllegalArgumentException();
         }
@@ -32,6 +33,7 @@ public class BankAccount {
     // Charged fees can go negative if needed
     public void chargeFee(double amount) {
         this.balance -= amount;
+        this.transactions.add(new Transaction("admin fee", amount));
     }
 
     public double getBalance() {
